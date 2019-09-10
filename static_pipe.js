@@ -10,10 +10,29 @@ var fs = require('fs');
 var root = __dirname;
 
 var server = http.createServer( function (req, res) {
-  var url = parse( req.url );
-  var path = join( root, url.pathname );
-  var stream = fs.createReadStream( path );
-  stream.pipe(res);
+	var url = parse( req.url );
+	var path = join( root, url.pathname );
+	fs.stat( path, function ( err, stat ) {
+		if (err) {
+			if ('ENOENT' === err.code) {  // ファイルが存在しない
+				res.statusCode = 404;
+				res.end('Not Found\n');
+			} else {
+				res.statusCode = 500;
+				res.end( 'Internal Server Error\n' );
+			}
+		} else {
+			res.setHeader( 'Content-Length', stat.size );
+
+			var stream = fs.createReadStream( path );
+			stream.pipe(res);
+			// p102
+			stream.on('error', function (err) {
+				res.statusCode = 500;
+				res.end( 'Internal Server Error\n');
+			});
+		}
+	});
 });
 
 server.listen(3000);
