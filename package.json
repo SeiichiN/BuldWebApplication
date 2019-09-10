@@ -1,0 +1,23 @@
+{
+  "name": "buildwebapplication",
+  "version": "1.0.0",
+  "description": "Build Web Application (実践Node.jsプログラミング 第4章）",
+  "main": "restful.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1",
+    "start": "node server.js"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/SeiichiN/BuldWebApplication.git"
+  },
+  "author": "Seiichi Nukayama",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/SeiichiN/BuldWebApplication/issues"
+  },
+  "homepage": "https://github.com/SeiichiN/BuldWebApplication#readme",
+  "dependencies": {
+    "formidable": "^1.2.1"
+  }
+}
