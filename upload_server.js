@@ -3,6 +3,7 @@
 
 var http = require('http');
 var formidable = require('formidable');
+var utf8 = require('utf8');
 
 var server = http.createServer( function (req, res) {
   switch (req.method) {
@@ -31,6 +32,11 @@ function show( req, res ) {
   res.end(html);
 }
 
+function show_progress (res, moji) {
+	res.write(moji, 'utf8');
+}
+
+var zoukabun = 0;
 function upload( req, res ) {
   if ( ! isFormData( req )) {
     res.statusCode = 400;
@@ -41,10 +47,12 @@ function upload( req, res ) {
   var form = new formidable.IncomingForm();
 
   form.on( 'progress', function (bytesReceived, bytesExpected) {
-	var progress_place = document.getElementById('progress');
 	var percent = Math.floor(bytesReceived / bytesExpected * 100);
-	var shikaku = Array(percent + 1).join('■');
-	console.log(shikaku);
+	  var wariai = Math.floor( percent / 10 );
+	  zoukabun = wariai - zoukabun;
+	  console.log(wariai);
+	var shikaku = Array(zoukabun + 1).join('->');
+	show_progress( res, shikaku );
   });
   
   form.parse( req, function (err, fields, files) {
@@ -52,7 +60,7 @@ function upload( req, res ) {
 	console.log(fields);
 	console.log('files:');
 	console.log(files);
-	res.end( 'upload complete!');
+	res.end( '\nupload complete!');
   });
 
   /*
