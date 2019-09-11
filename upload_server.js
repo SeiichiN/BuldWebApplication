@@ -25,6 +25,7 @@ function show( req, res ) {
            + '<p><input type="file" name="file"></p>'
            + '<p><input type="submit" value="Upload"></p>'
            + '</form>'
+	       + '<div id="progress"></div>'
   res.setHeader('Content-Type', 'text/html');
   res.setHeader('Content-Length', Buffer.byteLength(html));
   res.end(html);
@@ -39,6 +40,22 @@ function upload( req, res ) {
 
   var form = new formidable.IncomingForm();
 
+  form.on( 'progress', function (bytesReceived, bytesExpected) {
+	var progress_place = document.getElementById('progress');
+	var percent = Math.floor(bytesReceived / bytesExpected * 100);
+	var shikaku = Array(percent + 1).join('■');
+	console.log(shikaku);
+  });
+  
+  form.parse( req, function (err, fields, files) {
+	console.log('fields:');
+	console.log(fields);
+	console.log('files:');
+	console.log(files);
+	res.end( 'upload complete!');
+  });
+
+  /*
   form.on( 'field', function (field, value) {
     console.log('field:');
     console.log(field);
@@ -58,6 +75,7 @@ function upload( req, res ) {
   });
   
   form.parse( req );
+  */
 }
 
 function isFormData( req ) {
